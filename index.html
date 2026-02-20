@@ -103,14 +103,14 @@ textarea{resize:vertical;}
 .nav-item:hover{background:var(--s2);color:var(--text);}
 .nav-item.active{background:rgba(0,229,184,0.08);color:var(--accent);border:1px solid rgba(0,229,184,0.12);}
 .nav-item .ni{font-size:15px;width:20px;text-align:center;}
-.content{flex:1;padding:28px;overflow-x:hidden;}
+.content{flex:1;padding:20px;overflow-x:hidden;}
 
 /* KPI */
-.page-header{margin-bottom:24px;}
-.page-header h2{font-size:22px;font-weight:700;letter-spacing:-0.4px;}
-.page-header p{color:var(--muted2);font-size:13px;margin-top:4px;}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px;}
-.kpi-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
+.page-header{margin-bottom:12px;}
+.page-header h2{font-size:19px;font-weight:700;letter-spacing:-0.4px;}
+.page-header p{color:var(--muted2);font-size:12px;margin-top:2px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
+.kpi-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
 .kpi-card:hover{transform:translateY(-2px);border-color:var(--border2);}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .kpi-card.c1::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
@@ -119,24 +119,27 @@ textarea{resize:vertical;}
 .kpi-card.c4::before{background:linear-gradient(90deg,var(--accent2),var(--accent3));}
 .kpi-card.c5::before{background:linear-gradient(90deg,var(--warning),#f97316);}
 .kpi-card.c6::before{background:linear-gradient(90deg,var(--accent3),#ec4899);}
-.kpi-lbl{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
-.kpi-val{font-size:34px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;}
+.kpi-lbl{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
+.kpi-val{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;}
 .kpi-card.c1 .kpi-val{color:var(--accent);}
 .kpi-card.c2 .kpi-val{color:var(--success);}
 .kpi-card.c3 .kpi-val{color:var(--danger);}
 .kpi-card.c4 .kpi-val{color:var(--accent2);}
 .kpi-card.c5 .kpi-val{color:var(--warning);}
 .kpi-card.c6 .kpi-val{color:var(--accent3);}
-.kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;}
-.kpi-trend{position:absolute;top:18px;right:18px;font-size:18px;}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:15px;}
 
 /* CHARTS */
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-.chart-grid-3{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px;}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.chart-grid-3{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px;}
 .chart-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px;}
 .chart-card.full{grid-column:1/-1;}
 .chart-title{font-size:13px;font-weight:600;margin-bottom:4px;}
-.chart-sub{font-size:11px;color:var(--muted2);margin-bottom:18px;}
+.chart-sub{font-size:11px;color:var(--muted2);margin-bottom:12px;}
+.chart-canvas-wrap{position:relative;height:190px;width:100%;}
+.chart-canvas-wrap.sm{height:160px;}
+.chart-canvas-wrap.lg{height:210px;}
 
 /* TABLE */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
@@ -755,12 +758,12 @@ async function renderDashboard() {
         <div class="kpi-card c6"><div class="kpi-trend">📊</div><div class="kpi-lbl">Availability Rate</div><div class="kpi-val">${rate}%</div><div class="kpi-sub">yes / total</div></div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">7-Day Trend</div><div class="chart-sub">Daily submissions this week</div><canvas id="ch_trend" height="180"></canvas></div>
-        <div class="chart-card"><div class="chart-title">Availability Split</div><div class="chart-sub">Yes vs Not Available</div><canvas id="ch_avail" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">7-Day Trend</div><div class="chart-sub">Daily submissions this week</div><div class="chart-canvas-wrap sm"><canvas id="ch_trend"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Availability Split</div><div class="chart-sub">Yes vs Not Available</div><div class="chart-canvas-wrap sm"><canvas id="ch_avail"></canvas></div></div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">Top Insurance Types</div><div class="chart-sub">Most requested</div><canvas id="ch_ins" height="200"></canvas></div>
-        <div class="chart-card"><div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry volume</div><canvas id="ch_br" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Top Insurance Types</div><div class="chart-sub">Most requested</div><div class="chart-canvas-wrap"><canvas id="ch_ins"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry volume</div><div class="chart-canvas-wrap"><canvas id="ch_br"></canvas></div></div>
       </div>`;
 
     setTimeout(() => {
@@ -802,7 +805,7 @@ async function renderAnalytics() {
     el.innerHTML = `
       <div class="page-header"><h2>Analytics</h2><p>Deep insights into inquiry patterns across all branches</p></div>
       <div class="chart-grid-3">
-        <div class="chart-card"><div class="chart-title">Monthly Volume</div><div class="chart-sub">Inquiries over last 6 months</div><canvas id="an_monthly" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Monthly Volume</div><div class="chart-sub">Inquiries over last 6 months</div><div class="chart-canvas-wrap"><canvas id="an_monthly"></canvas></div></div>
         <div class="chart-card" style="overflow:auto;">
           <div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry count</div>
           <ul class="top-list" style="margin-top:8px;">
@@ -811,8 +814,8 @@ async function renderAnalytics() {
         </div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">Insurance Type vs Availability</div><div class="chart-sub">Available vs not, by type</div><canvas id="an_ia" height="220"></canvas></div>
-        <div class="chart-card"><div class="chart-title">Inquiry Hour Distribution</div><div class="chart-sub">What time do customers visit?</div><canvas id="an_hours" height="220"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Insurance Type vs Availability</div><div class="chart-sub">Available vs not, by type</div><div class="chart-canvas-wrap lg"><canvas id="an_ia"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Inquiry Hour Distribution</div><div class="chart-sub">What time do customers visit?</div><div class="chart-canvas-wrap lg"><canvas id="an_hours"></canvas></div></div>
       </div>`;
 
     setTimeout(()=>{
