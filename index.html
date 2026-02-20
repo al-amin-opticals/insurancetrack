@@ -206,16 +206,33 @@ tr:hover td{background:rgba(255,255,255,0.015);}
 .fb.ok{color:var(--success);}
 .fb.er{color:var(--danger);}
 
-/* FIELD BUILDER */
-.field-builder-list{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;}
-.fb-item{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(28,45,69,0.5);background:var(--s1);transition:background 0.15s;}
-.fb-item:last-child{border-bottom:none;}
-.fb-item:hover{background:var(--s2);}
-.fb-label{flex:1;font-size:13px;font-weight:500;}
-.fb-meta{display:flex;align-items:center;gap:6px;}
-.fb-actions{display:flex;gap:4px;}
-.fb-fixed{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;background:var(--s3);padding:2px 7px;border-radius:4px;}
-.fb-req{font-size:10px;color:var(--warning);}
+/* ── FIELD BUILDER ── */
+.fb-legend{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.fb-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--s2);border:1px solid var(--border);border-radius:10px 10px 0 0;margin-bottom:0;}
+.fb-section-hdr span:first-child{font-size:13px;font-weight:600;color:var(--text);}
+.fb-section-sub{font-size:11px;color:var(--muted2);}
+.fb-list{border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:4px;}
+.fb-row{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(28,45,69,0.5);background:var(--s1);transition:background 0.15s;}
+.fb-row:last-child{border-bottom:none;}
+.fb-row:hover{background:var(--s2);}
+.fb-drag-handle{font-size:16px;color:var(--muted);cursor:grab;padding-top:2px;flex-shrink:0;user-select:none;}
+.fb-info{flex:1;min-width:0;}
+.fb-label-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.fb-field-label{font-size:13px;font-weight:600;color:var(--text);}
+.fb-req-badge{font-size:10px;color:var(--warning);font-weight:600;background:rgba(255,176,32,0.1);padding:2px 6px;border-radius:4px;}
+.fb-opt-badge{font-size:10px;color:var(--muted2);background:var(--s3);padding:2px 6px;border-radius:4px;}
+.fb-width-badge{font-size:10px;color:var(--accent2);background:rgba(59,158,255,0.08);padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;}
+.fb-core-badge{font-size:10px;color:var(--muted);background:var(--s3);padding:2px 7px;border-radius:4px;font-family:'DM Mono',monospace;}
+.fb-placeholder{font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px;}
+.fb-options{font-size:11px;color:var(--muted2);margin-top:2px;}
+.fb-actions{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;align-items:flex-start;}
+.fba-btn{padding:5px 9px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.fba-btn:hover:not(:disabled){background:var(--s3);color:var(--text);border-color:var(--border2);}
+.fba-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.fba-edit:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
+.fba-del:hover:not(:disabled){color:var(--danger);border-color:var(--danger);background:rgba(255,64,96,0.08);}
+.fba-up:hover:not(:disabled),.fba-down:hover:not(:disabled),.fba-top:hover:not(:disabled),.fba-bot:hover:not(:disabled){color:var(--accent2);border-color:var(--accent2);}
+.fb-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;background:var(--s1);}
 
 /* ANALYTICS */
 .top-list{list-style:none;}
@@ -338,31 +355,39 @@ tr:hover td{background:rgba(255,255,255,0.015);}
 <div class="modal-bg" id="fieldModal">
   <div class="modal">
     <h3 id="fmTitle">Add Custom Field</h3>
-    <p class="mdesc">Configure the field that will appear on the branch inquiry form.</p>
+    <p class="mdesc">Configure the field settings below.</p>
     <div class="fg"><label>Field Label *</label><input type="text" id="fmLabel" placeholder="e.g. Policy Number, Vehicle Plate..."></div>
-    <div class="fg"><label>Field Type *</label>
+    <div class="fg"><label>Placeholder Text</label><input type="text" id="fmPlaceholder" placeholder="Hint shown inside the input box (optional)"></div>
+    <div class="fg" id="fmTypeRow"><label>Field Type *</label>
       <select id="fmType" onchange="fmTypeChange()">
         <option value="text">Text (single line)</option>
         <option value="number">Number</option>
         <option value="textarea">Text Area (multi-line)</option>
-        <option value="select">Dropdown</option>
-        <option value="date">Date</option>
+        <option value="select">Dropdown (select list)</option>
+        <option value="date">Date picker</option>
         <option value="yesno">Yes / No Toggle</option>
       </select>
     </div>
     <div class="fg" id="fmOptWrap" style="display:none">
-      <label>Options (one per line) *</label>
+      <label>Dropdown Options * (one per line)</label>
       <textarea id="fmOpts" rows="4" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+    </div>
+    <div class="fg"><label>Field Width</label>
+      <select id="fmWidth">
+        <option value="half">Half Width (side by side)</option>
+        <option value="full">Full Width (entire row)</option>
+      </select>
     </div>
     <div class="fg">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text);">
-        <input type="checkbox" id="fmReq" style="width:auto;padding:0;"> Required field
+        <input type="checkbox" id="fmReq" style="width:auto;padding:0;"> Mark as required field
       </label>
     </div>
     <div id="fmErr" class="err-msg"></div>
     <div class="modal-btns">
+      <button class="btn btn-red btn-sm" id="fmDeleteBtn" onclick="deleteFieldFromModal()" style="display:none;margin-right:auto;">🗑 Delete Field</button>
       <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-sm" onclick="saveField()">Save Field</button>
+      <button class="btn btn-sm" onclick="saveField()">💾 Save Field</button>
     </div>
   </div>
 </div>
@@ -946,79 +971,201 @@ async function exportCSV() {
 // ══════════════════════════════════════════════════════
 // FIELD BUILDER
 // ══════════════════════════════════════════════════════
+// ── CORE FIELD DEFINITIONS
+const CORE_FIELDS = [
+  {id:'cf_name',  label:'Customer Full Name',  type:'text',     required:true,  placeholder:'e.g. Ahmed Al Mansoori', width:'half', deletable:false},
+  {id:'cf_eid',   label:'Emirates ID',         type:'text',     required:true,  placeholder:'784-XXXX-XXXXXXX-X',     width:'half', deletable:false},
+  {id:'cf_ins',   label:'Insurance Type',      type:'select',   required:true,  placeholder:'',                       width:'half', deletable:false},
+  {id:'cf_co',    label:'Working Company',     type:'text',     required:false, placeholder:"Customer's employer",    width:'half', deletable:false},
+  {id:'cf_avail', label:'Insurance Available', type:'yesno',    required:true,  placeholder:'',                       width:'full', deletable:false},
+  {id:'cf_notes', label:'Additional Notes',    type:'textarea', required:false, placeholder:'Any extra details...',   width:'half', deletable:false},
+  {id:'cf_staff', label:'Staff Name',          type:'text',     required:false, placeholder:'Your name',              width:'half', deletable:false},
+];
+const TYPE_LABELS = {text:'Text',number:'Number',textarea:'Text Area',select:'Dropdown',date:'Date',yesno:'Yes/No'};
+const WIDTH_LABELS = {full:'Full Width',half:'Half Width'};
+
 async function renderFieldsPage() {
   const el = document.getElementById('pgFields');
   el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
   const cfg = await getConfig(); cachedConfig = cfg;
-  const CORE=[{label:'Customer Full Name',type:'text',required:true},{label:'Emirates ID',type:'text',required:true},{label:'Insurance Type',type:'select',required:true},{label:'Working Company',type:'text',required:false},{label:'Insurance Available',type:'yesno',required:true},{label:'Additional Notes',type:'textarea',required:false},{label:'Staff Name',type:'text',required:false}];
-  const coreHTML = CORE.map(f=>`<div class="fb-item"><span style="color:var(--muted)">☰</span><span class="fb-label">${f.label}</span><div class="fb-meta"><span class="field-type-badge ft-${f.type}">${f.type}</span>${f.required?'<span class="fb-req">required</span>':''}<span class="fb-fixed">core</span></div></div>`).join('');
-  const custHTML = cfg.customFields.length===0
-    ? '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">No custom fields yet.</div>'
-    : cfg.customFields.map((f,i)=>`<div class="fb-item"><span style="color:var(--muted)">☰</span><span class="fb-label">${f.label}</span><div class="fb-meta"><span class="field-type-badge ft-${f.type}">${f.type}</span>${f.required?'<span class="fb-req">required</span>':''}</div><div class="fb-actions"><button class="btn btn-ghost btn-xs" onclick="editField(${i})">✏️</button><button class="btn btn-red btn-xs" onclick="deleteField(${i})">🗑</button>${i>0?`<button class="btn btn-ghost btn-xs" onclick="moveField(${i},-1)">↑</button>`:''} ${i<cfg.customFields.length-1?`<button class="btn btn-ghost btn-xs" onclick="moveField(${i},1)">↓</button>`:''}</div></div>`).join('');
+  const coreOverrides = cfg.coreFieldOverrides || {};
+
+  const coreRows = CORE_FIELDS.map((f,i) => {
+    const ov = coreOverrides[f.id] || {};
+    const label = ov.label || f.label;
+    const ph = ov.placeholder !== undefined ? ov.placeholder : f.placeholder;
+    const req = ov.required !== undefined ? ov.required : f.required;
+    const width = ov.width || f.width;
+    return `<div class="fb-row">
+      <div class="fb-drag-handle">⠿</div>
+      <div class="fb-info">
+        <div class="fb-label-row">
+          <span class="fb-field-label">${label}</span>
+          <span class="field-type-badge ft-${f.type}">${TYPE_LABELS[f.type]||f.type}</span>
+          ${req?'<span class="fb-req-badge">required</span>':'<span class="fb-opt-badge">optional</span>'}
+          <span class="fb-width-badge">${WIDTH_LABELS[width]||width}</span>
+          <span class="fb-core-badge">core</span>
+        </div>
+        ${ph?`<div class="fb-placeholder">placeholder: "${ph}"</div>`:''}
+      </div>
+      <div class="fb-actions">
+        <button class="fba-btn fba-edit" onclick="openEditCore(${i})">✏️ Edit</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const customRows = cfg.customFields.length === 0
+    ? `<div class="fb-empty">No custom fields yet — click <b>+ Add Custom Field</b> below</div>`
+    : cfg.customFields.map((f,i) => {
+        const total = cfg.customFields.length;
+        return `<div class="fb-row">
+      <div class="fb-drag-handle">⠿</div>
+      <div class="fb-info">
+        <div class="fb-label-row">
+          <span class="fb-field-label">${f.label}</span>
+          <span class="field-type-badge ft-${f.type}">${TYPE_LABELS[f.type]||f.type}</span>
+          ${f.required?'<span class="fb-req-badge">required</span>':'<span class="fb-opt-badge">optional</span>'}
+          <span class="fb-width-badge">${WIDTH_LABELS[f.width||'half']}</span>
+        </div>
+        ${f.placeholder?`<div class="fb-placeholder">placeholder: "${f.placeholder}"</div>`:''}
+        ${f.type==='select'&&f.options&&f.options.length?`<div class="fb-options">options: ${f.options.join(' · ')}</div>`:''}
+      </div>
+      <div class="fb-actions">
+        <button class="fba-btn fba-edit"  onclick="openEditCustom(${i})">✏️ Edit</button>
+        <button class="fba-btn fba-up"    onclick="moveField(${i},-1)" ${i===0?'disabled':''}>↑ Up</button>
+        <button class="fba-btn fba-down"  onclick="moveField(${i},1)"  ${i===total-1?'disabled':''}>↓ Down</button>
+        <button class="fba-btn fba-top"   onclick="moveField(${i},-999)" ${i===0?'disabled':''}>⤒ Top</button>
+        <button class="fba-btn fba-bot"   onclick="moveField(${i},999)"  ${i===total-1?'disabled':''}>⤓ Bottom</button>
+        <button class="fba-btn fba-del"   onclick="deleteField(${i})">🗑 Delete</button>
+      </div>
+    </div>`;
+      }).join('');
 
   el.innerHTML = `
-    <div class="page-header"><h2>Form Field Builder</h2><p>Customize what data branch staff collect</p></div>
-    <div class="settings-layout">
-      <div class="scard wide"><h3>🔒 Core Fields</h3><p class="sdesc">These are fixed and always present on the form.</p><div class="field-builder-list">${coreHTML}</div></div>
-      <div class="scard wide"><h3>🧩 Custom Fields</h3><p class="sdesc">Add extra fields for your specific needs. They appear below core fields on the branch form, and as columns in the records table.</p><div class="field-builder-list" id="cfList">${custHTML}</div><button class="btn btn-sm" style="width:auto;padding:10px 20px;" onclick="openAddField()">+ Add Custom Field</button></div>
-    </div>`;
+    <div class="page-header"><h2>Form Field Builder</h2><p>Edit labels, placeholders, width, required status — add, delete and reorder custom fields</p></div>
+    <div class="fb-legend">
+      <span class="field-type-badge ft-text">text</span>
+      <span class="field-type-badge ft-number">number</span>
+      <span class="field-type-badge ft-select">dropdown</span>
+      <span class="field-type-badge ft-date">date</span>
+      <span class="field-type-badge ft-textarea">textarea</span>
+      <span class="field-type-badge ft-yesno">yes/no</span>
+    </div>
+    <div class="fb-section-hdr"><span>🔒 Core Fields</span><span class="fb-section-sub">Always shown · edit label & placeholder · cannot delete or change type</span></div>
+    <div class="fb-list">${coreRows}</div>
+    <div class="fb-section-hdr" style="margin-top:20px;"><span>🧩 Custom Fields</span><span class="fb-section-sub">Fully editable · reorder · delete · appear after core fields on form</span></div>
+    <div class="fb-list">${customRows}</div>
+    <div style="margin-top:14px;"><button class="btn btn-sm" style="width:auto;padding:10px 22px;" onclick="openAddField()">＋ Add Custom Field</button></div>`;
+}
+
+function openEditCore(i) {
+  const cfg = cachedConfig;
+  const ov = (cfg.coreFieldOverrides||{})[CORE_FIELDS[i].id] || {};
+  const f = CORE_FIELDS[i];
+  editFieldIdx = i; window._editingCore = true;
+  document.getElementById('fmTitle').textContent = '✏️ Edit Core Field';
+  document.getElementById('fmLabel').value = ov.label || f.label;
+  document.getElementById('fmPlaceholder').value = ov.placeholder !== undefined ? ov.placeholder : f.placeholder;
+  document.getElementById('fmType').value = f.type;
+  document.getElementById('fmType').disabled = true;
+  document.getElementById('fmOpts').value = '';
+  document.getElementById('fmOptWrap').style.display = 'none';
+  document.getElementById('fmReq').checked = ov.required !== undefined ? ov.required : f.required;
+  document.getElementById('fmWidth').value = ov.width || f.width;
+  document.getElementById('fmTypeRow').style.display = 'none';
+  document.getElementById('fmErr').textContent = '';
+  document.getElementById('fmDeleteBtn').style.display = 'none';
+  document.getElementById('fieldModal').classList.add('open');
+}
+
+function openEditCustom(i) {
+  const f = cachedConfig.customFields[i];
+  editFieldIdx = i; window._editingCore = false;
+  document.getElementById('fmTitle').textContent = '✏️ Edit Custom Field';
+  document.getElementById('fmLabel').value = f.label;
+  document.getElementById('fmPlaceholder').value = f.placeholder || '';
+  document.getElementById('fmType').value = f.type;
+  document.getElementById('fmType').disabled = false;
+  document.getElementById('fmOpts').value = (f.options||[]).join('\n');
+  document.getElementById('fmOptWrap').style.display = f.type==='select' ? '' : 'none';
+  document.getElementById('fmReq').checked = !!f.required;
+  document.getElementById('fmWidth').value = f.width || 'half';
+  document.getElementById('fmTypeRow').style.display = '';
+  document.getElementById('fmErr').textContent = '';
+  document.getElementById('fmDeleteBtn').style.display = '';
+  document.getElementById('fieldModal').classList.add('open');
 }
 
 function openAddField() {
-  editFieldIdx=null;
-  document.getElementById('fmTitle').textContent='Add Custom Field';
-  document.getElementById('fmLabel').value='';
-  document.getElementById('fmType').value='text';
-  document.getElementById('fmOpts').value='';
-  document.getElementById('fmReq').checked=false;
-  document.getElementById('fmOptWrap').style.display='none';
-  document.getElementById('fmErr').textContent='';
+  editFieldIdx = null; window._editingCore = false;
+  document.getElementById('fmTitle').textContent = '＋ Add Custom Field';
+  document.getElementById('fmLabel').value = '';
+  document.getElementById('fmPlaceholder').value = '';
+  document.getElementById('fmType').value = 'text';
+  document.getElementById('fmType').disabled = false;
+  document.getElementById('fmOpts').value = '';
+  document.getElementById('fmOptWrap').style.display = 'none';
+  document.getElementById('fmReq').checked = false;
+  document.getElementById('fmWidth').value = 'half';
+  document.getElementById('fmTypeRow').style.display = '';
+  document.getElementById('fmErr').textContent = '';
+  document.getElementById('fmDeleteBtn').style.display = 'none';
   document.getElementById('fieldModal').classList.add('open');
 }
 
-function editField(i) {
-  const f = cachedConfig.customFields[i];
-  editFieldIdx=i;
-  document.getElementById('fmTitle').textContent='Edit Field';
-  document.getElementById('fmLabel').value=f.label;
-  document.getElementById('fmType').value=f.type;
-  document.getElementById('fmOpts').value=(f.options||[]).join('\n');
-  document.getElementById('fmReq').checked=!!f.required;
-  document.getElementById('fmOptWrap').style.display=f.type==='select'?'':'none';
-  document.getElementById('fmErr').textContent='';
-  document.getElementById('fieldModal').classList.add('open');
+function closeModal() {
+  document.getElementById('fieldModal').classList.remove('open');
+  document.getElementById('fmType').disabled = false;
 }
-
-function closeModal() { document.getElementById('fieldModal').classList.remove('open'); }
 function fmTypeChange() { document.getElementById('fmOptWrap').style.display=document.getElementById('fmType').value==='select'?'':'none'; }
 
 async function saveField() {
-  const label=document.getElementById('fmLabel').value.trim();
-  const type=document.getElementById('fmType').value;
-  const opts=document.getElementById('fmOpts').value.trim().split('\n').map(s=>s.trim()).filter(Boolean);
-  const req=document.getElementById('fmReq').checked;
-  if (!label) { document.getElementById('fmErr').textContent='Label required.'; return; }
-  if (type==='select'&&opts.length<2) { document.getElementById('fmErr').textContent='Add at least 2 options.'; return; }
-  const field={label,type,required:req,options:type==='select'?opts:[]};
-  const cfg=await getConfig();
-  if (editFieldIdx!==null) cfg.customFields[editFieldIdx]=field;
-  else cfg.customFields.push(field);
+  const label = document.getElementById('fmLabel').value.trim();
+  const type  = document.getElementById('fmType').value;
+  const ph    = document.getElementById('fmPlaceholder').value.trim();
+  const opts  = document.getElementById('fmOpts').value.trim().split('\n').map(s=>s.trim()).filter(Boolean);
+  const req   = document.getElementById('fmReq').checked;
+  const width = document.getElementById('fmWidth').value;
+  const err   = document.getElementById('fmErr');
+  if (!label) { err.textContent='Field label is required.'; return; }
+  if (type==='select'&&opts.length<2) { err.textContent='Add at least 2 dropdown options.'; return; }
+  const cfg = await getConfig();
+  if (window._editingCore) {
+    if (!cfg.coreFieldOverrides) cfg.coreFieldOverrides = {};
+    cfg.coreFieldOverrides[CORE_FIELDS[editFieldIdx].id] = {label,placeholder:ph,required:req,width};
+  } else {
+    const field = {label,type,required:req,placeholder:ph,width,options:type==='select'?opts:[]};
+    if (editFieldIdx!==null) cfg.customFields[editFieldIdx]=field;
+    else cfg.customFields.push(field);
+  }
   await saveConfig(cfg); cachedConfig=cfg;
   closeModal(); renderFieldsPage();
-  showToast(`✅ Field "${label}" saved!`);
+  showToast(`✅ "${label}" saved!`);
+}
+
+async function deleteFieldFromModal() {
+  if (window._editingCore||editFieldIdx===null) return;
+  const cfg = await getConfig();
+  const name = cfg.customFields[editFieldIdx].label;
+  if (!confirm(`Delete field "${name}"? Cannot be undone.`)) return;
+  cfg.customFields.splice(editFieldIdx,1);
+  await saveConfig(cfg); cachedConfig=cfg;
+  closeModal(); renderFieldsPage(); showToast('Field deleted.');
 }
 
 async function deleteField(i) {
-  const cfg=await getConfig();
+  const cfg = await getConfig();
   if (!confirm(`Delete field "${cfg.customFields[i].label}"?`)) return;
   cfg.customFields.splice(i,1); await saveConfig(cfg); cachedConfig=cfg;
   renderFieldsPage(); showToast('Field deleted.');
 }
 
 async function moveField(i,dir) {
-  const cfg=await getConfig(); const arr=cfg.customFields; const ni=i+dir;
-  if (ni<0||ni>=arr.length) return;
-  [arr[i],arr[ni]]=[arr[ni],arr[i]];
+  const cfg = await getConfig(); const arr = cfg.customFields;
+  const ni = Math.max(0, Math.min(arr.length-1, i+dir));
+  if (ni===i) return;
+  const [item] = arr.splice(i,1);
+  arr.splice(ni,0,item);
   await saveConfig(cfg); cachedConfig=cfg; renderFieldsPage();
 }
 
