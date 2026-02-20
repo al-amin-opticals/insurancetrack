@@ -758,12 +758,12 @@ async function renderDashboard() {
         <div class="kpi-card c6"><div class="kpi-trend">📊</div><div class="kpi-lbl">Availability Rate</div><div class="kpi-val">${rate}%</div><div class="kpi-sub">yes / total</div></div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">7-Day Trend</div><div class="chart-sub">Daily submissions this week</div><div class="chart-canvas-wrap sm"><canvas id="ch_trend"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">Availability Split</div><div class="chart-sub">Yes vs Not Available</div><div class="chart-canvas-wrap sm"><canvas id="ch_avail"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">7-Day Trend</div><div class="chart-sub">Daily submissions this week</div><div style="position:relative;height:160px;width:100%"><canvas id="ch_trend"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Availability Split</div><div class="chart-sub">Yes vs Not Available</div><div style="position:relative;height:160px;width:100%"><canvas id="ch_avail"></canvas></div></div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">Top Insurance Types</div><div class="chart-sub">Most requested</div><div class="chart-canvas-wrap"><canvas id="ch_ins"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry volume</div><div class="chart-canvas-wrap"><canvas id="ch_br"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Top Insurance Types</div><div class="chart-sub">Most requested</div><div style="position:relative;height:180px;width:100%"><canvas id="ch_ins"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry volume</div><div style="position:relative;height:180px;width:100%"><canvas id="ch_br"></canvas></div></div>
       </div>`;
 
     setTimeout(() => {
@@ -805,7 +805,7 @@ async function renderAnalytics() {
     el.innerHTML = `
       <div class="page-header"><h2>Analytics</h2><p>Deep insights into inquiry patterns across all branches</p></div>
       <div class="chart-grid-3">
-        <div class="chart-card"><div class="chart-title">Monthly Volume</div><div class="chart-sub">Inquiries over last 6 months</div><div class="chart-canvas-wrap"><canvas id="an_monthly"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Monthly Volume</div><div class="chart-sub">Inquiries over last 6 months</div><div style="position:relative;height:180px;width:100%"><canvas id="an_monthly"></canvas></div></div>
         <div class="chart-card" style="overflow:auto;">
           <div class="chart-title">Top Branches</div><div class="chart-sub">By inquiry count</div>
           <ul class="top-list" style="margin-top:8px;">
@@ -814,8 +814,8 @@ async function renderAnalytics() {
         </div>
       </div>
       <div class="chart-grid">
-        <div class="chart-card"><div class="chart-title">Insurance Type vs Availability</div><div class="chart-sub">Available vs not, by type</div><div class="chart-canvas-wrap lg"><canvas id="an_ia"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">Inquiry Hour Distribution</div><div class="chart-sub">What time do customers visit?</div><div class="chart-canvas-wrap lg"><canvas id="an_hours"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Insurance Type vs Availability</div><div class="chart-sub">Available vs not, by type</div><div style="position:relative;height:190px;width:100%"><canvas id="an_ia"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Inquiry Hour Distribution</div><div class="chart-sub">What time do customers visit?</div><div style="position:relative;height:190px;width:100%"><canvas id="an_hours"></canvas></div></div>
       </div>`;
 
     setTimeout(()=>{
@@ -1123,6 +1123,8 @@ function resetConnection(){
 // ══════════════════════════════════════════════════════
 function mkChart(id,type,labels,datasets,extraOpts={}) {
   const ctx=document.getElementById(id); if(!ctx) return;
+  // Fix: set explicit height on canvas so it never expands infinitely
+  ctx.style.maxHeight = ctx.closest('.chart-canvas-wrap') ? '' : '200px';
   const def={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false,labels:{color:'#7a9ab8',font:{size:11,family:'DM Mono'}}},tooltip:{backgroundColor:'#111d30',titleColor:'#dde8f5',bodyColor:'#7a9ab8',borderColor:'#1c2d45',borderWidth:1}},scales:{x:{ticks:{color:'#4d6585',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(28,45,69,0.5)'}},y:{ticks:{color:'#4d6585',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(28,45,69,0.5)'}}}};
   if(type==='doughnut'){delete def.scales;def.plugins.legend.display=true;def.cutout='65%';}
   const ch=new Chart(ctx,{type,data:{labels,datasets},options:deepMerge(def,extraOpts)});
